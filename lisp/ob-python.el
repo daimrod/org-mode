@@ -74,7 +74,7 @@ This will typically be either `python' or `python-mode'."
   "Execute a block of Python code with Babel.
 This function is called by `org-babel-execute-src-block'."
   (let* ((session (org-babel-python-initiate-session
-		   (cdr (assoc :session params))))
+		   (cdr (assoc :session params)) params))
          (result-params (cdr (assoc :result-params params)))
          (result-type (cdr (assoc :result-type params)))
 	 (return-val (when (and (eq result-type 'value) (not session))
