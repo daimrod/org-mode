@@ -173,7 +173,7 @@ Emacs-lisp table, otherwise return the results as a string."
 (defvar py-default-interpreter)
 (defvar py-which-bufname)
 (defvar python-shell-buffer-name)
-(defun org-babel-python-initiate-session-by-key (&optional session)
+(defun org-babel-python-initiate-session-by-key (&optional session params)
   "Initiate a python session.
 If there is not a current inferior-process-buffer in SESSION
 then create.  Return the initialized session."
@@ -181,9 +181,10 @@ then create.  Return the initialized session."
   (save-window-excursion
     (let* ((session (if session (intern session) :default))
            (python-buffer (org-babel-python-session-buffer session))
+	   (python-command (or (cdr (assoc :python params)) org-babel-python-command))
 	   (cmd (if (member system-type '(cygwin windows-nt ms-dos))
-		    (concat org-babel-python-command " -i")
-		  org-babel-python-command)))
+		    (concat python-command " -i")
+		  python-command)))
       (cond
        ((and (eq 'python org-babel-python-mode)
 	     (fboundp 'run-python)) ; python.el
@@ -220,7 +221,7 @@ then create.  Return the initialized session."
   "Create a session named SESSION according to PARAMS."
   (unless (string= session "none")
     (org-babel-python-session-buffer
-     (org-babel-python-initiate-session-by-key session))))
+     (org-babel-python-initiate-session-by-key session params))))
 
 (defvar org-babel-python-eoe-indicator "'org_babel_python_eoe'"
   "A string to indicate that evaluation has completed.")
